@@ -57,7 +57,7 @@ the second container is for vitals, the third container is for allergies, and th
                             <hr>
                             <table class="table table-hover table-dark">
 
-                                {% for row in patients_conditions %}
+                                {% for row in patient_conditions %}
 
                                 <tr>
                                     <td> 
@@ -147,7 +147,7 @@ the second container is for vitals, the third container is for allergies, and th
                             <table class="table table-hover table-dark">
                                 <tr>
                                     <th>Medication Code</th>
-                                    {% for x in patients_medication %}
+                                    {% for x in patient_medications %}
                                     <td>  {{x.ndc_codes}} </td>
                                     {% endfor %}
                     
