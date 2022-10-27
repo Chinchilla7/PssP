@@ -145,9 +145,9 @@ the second container is for vitals, the third container is for allergies, and th
                             <h3> Medications </h3>
                             <hr>
                             <table class="table table-hover table-dark">
+                                {% for x in patient_medications %}
                                 <tr>
                                     <th>Medication Code</th>
-                                    {% for x in patient_medications %}
                                     <td>  {{x.ndc_codes}} 
                                     <br/>
                                     {% for db_medication in db_medications %}
@@ -155,11 +155,61 @@ the second container is for vitals, the third container is for allergies, and th
                                                 {{db_medication.medication_name}}
                                         {% endif %}
                                     {% endfor %}
-                                    <a class="btn btn-warning btn-xs" data-toggle="modal" >Edit</a>
-
                                     <br />
+                                    <a href="/update_medications/{{x.id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaleditmedication{{x.id}}" >Edit</a>
                                     </td>
+
+                                    <!-- MODEL WINDOW FOR EDITING -->
+
+                                <div id="modaleditmedication{{x.id}}" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Update Information</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{url_for('update_medications')}}" method="POST">
+
+                                                <div class="form-group">
+                                                    <label for="mrn">MRN</label>
+                                                    <input type="text" class="form-control" name="mrn" value="{{x.mrn}}" readonly>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="mrn">ROW ID</label>
+                                                    <input type="text" class="form-control" name="id" value="{{x.id}}" readonly>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="mrn">EXISTING MEDICATION</label>
+                                                    <input type="text" class="form-control" name="id" value="{{x.ndc_codes}}" readonly>
+                                                </div>
+
+                                                <!-- create a drop down that shows medications -->
+                                                <div class="form-group">
+                                                    <label for="ndc_codes">Condition Code</label>
+                                                    <select class="form-control" name="ndc_codes">
+                                                        {% for x in db_medications %}
+                                                        <!-- default option value is none -->
+                                                            <option value="{{x.ndc_codes}}" >{{x.ndc_codes}} : {{x.medication_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <button class="btn btn-primary" type="submit">Update</button>
+                                                </div>
+
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
                                     {% endfor %}
+                                </tr>
                     
 
                             </table>
