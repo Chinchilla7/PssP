@@ -149,7 +149,13 @@ the second container is for vitals, the third container is for allergies, and th
                                     <th>Medication Code</th>
                                     {% for x in patient_medications %}
                                     <td>  {{x.ndc_codes}} </td>
+                                    <br/>
+                                    {% for db_medication in db_medications %}
+                                        {% if x.ndc_codes == db_medication.ndc_codes %}
+                                                {{db_medication.medication_name}}
+                                        {% endif %}
                                     {% endfor %}
+                                    <br />
                     
 
                             </table>
