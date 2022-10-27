@@ -58,7 +58,7 @@ class Conditions_patient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     mrn = db.Column(db.String(255), db.ForeignKey('patients.mrn'))
-    icd10_code = db.Column(db.String(255), db.ForeignKey('conditions.icd_10_codes'))
+    icd_10_codes = db.Column(db.String(255), db.ForeignKey('conditions.icd_10_codes'))
 
     # this first function __init__ is to establish the class for python GUI
     def __init__(self, mrn, icd_10_codes):
