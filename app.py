@@ -129,8 +129,8 @@ class Medications(db.Model):
     def to_json(self):
         return {
             'id': self.id,
-            'med_ndc': self.ndc_codes,
-            'med_human_name': self.medication_name
+            'ndc_codes': self.ndc_codes,
+            'medication_name': self.medication_name
         }
 
 
