@@ -228,6 +228,23 @@ def update_conditions(): # note this function needs to match name in html form a
         ## then return to patient details page
         return redirect(url_for('get_patient_details', mrn=patient_condition.mrn))
 
+# this endpoint is for updating ONE patient medication
+@app.route('/update_medications', methods = ['GET', 'POST'])
+def update_medications(): # note this function needs to match name in html form action
+    if request.method == 'POST':
+        ## get mrn from form
+        form_id = request.form.get('id')
+        print('form_id', form_id)
+        form_ndc_codes = request.form.get('ndc_codes')
+        print('form_ndc_codes', form_ndc_codes)
+        patient_medication = Medications_patient.query.filter_by(id=form_id).first()
+        print('patient_medication', patient_medication)
+        patient_medication.ndc_codes = request.form.get('ndc_codes')
+        db.session.commit()
+        flash("Patient Medication Updated Successfully")
+        ## then return to patient details page
+        return redirect(url_for('get_patient_details', mrn=patient_medication.mrn))
+
 
 
 
