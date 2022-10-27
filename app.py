@@ -110,7 +110,7 @@ class Medications_patient(db.Model):
         return {
             'id': self.id,
             'mrn': self.mrn,
-            'med_ndc': self.ndc_codes
+            'ndc_codes': self.ndc_codes
         }
     
 class Medications(db.Model):
