@@ -12,16 +12,16 @@ mysql_host = os.getenv("MYSQL_HOST")
 db = SQLAlchemy()
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://' + mysql_username + ':' + mysql_password + '@' + mysql_host + ':3306/patient_portal'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + mysql_username + ':' + mysql_password + '@' + mysql_host + ':3306/patient_portal'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'sdf#$#dfjkhdf0SDJH0df9fd98343fdfu34rf'
+app.secret_key = 'asdfghjkl936475'
 
 db.init_app(app)
 
 
 ### Models ###
 class Patients(db.Model):
-    __tablename__ = 'production_patients'
+    __tablename__ = 'patients'
 
     id = db.Column(db.Integer, primary_key=True)
     mrn = db.Column(db.String(255))
@@ -29,14 +29,17 @@ class Patients(db.Model):
     last_name = db.Column(db.String(255))
     zip_code = db.Column(db.String(255), nullable=True)
     gender = db.Column(db.String(255), nullable=True)
+    dob = db.Column(db.String(255), nullable=True)
+
 
     # this first function __init__ is to establish the class for python GUI
-    def __init__(self, mrn, first_name, last_name, zip_code, gender):
+    def __init__(self, mrn, first_name, last_name, zip_code, gender, dob):
         self.mrn = mrn
         self.first_name = first_name
         self.last_name = last_name
         self.zip_code = zip_code
         self.gender = gender
+        self.dob = dob
 
     # this second function is for the API endpoints to return JSON 
     def to_json(self):
@@ -46,87 +49,88 @@ class Patients(db.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'zip_code': self.zip_code,
-            'gender': self.gender
+            'gender': self.gender,
+            'dob': self.dob
         }
 
 class Conditions_patient(db.Model):
-    __tablename__ = 'production_patient_conditions'
+    __tablename__ = 'patients_conditions'
 
     id = db.Column(db.Integer, primary_key=True)
-    mrn = db.Column(db.String(255), db.ForeignKey('production_patients.mrn'))
-    icd10_code = db.Column(db.String(255), db.ForeignKey('production_conditions.icd10_code'))
+    mrn = db.Column(db.String(255), db.ForeignKey('patients.mrn'))
+    icd10_code = db.Column(db.String(255), db.ForeignKey('conditions.icd_10_codes'))
 
     # this first function __init__ is to establish the class for python GUI
-    def __init__(self, mrn, icd10_code):
+    def __init__(self, mrn, icd_10_codes):
         self.mrn = mrn
-        self.icd10_code = icd10_code
+        self.icd_10_codes = icd_10_codes
 
     # this second function is for the API endpoints to return JSON
     def to_json(self):
         return {
             'id': self.id,
             'mrn': self.mrn,
-            'icd10_code': self.icd10_code
+            'icd_10_codes': self.icd_10_codes
         }
 
 class Conditions(db.Model):
-    __tablename__ = 'production_conditions'
+    __tablename__ = 'conditions'
 
     id = db.Column(db.Integer, primary_key=True)
-    icd10_code = db.Column(db.String(255))
-    icd10_description = db.Column(db.String(255))
+    icd_10_codes = db.Column(db.String(255))
+    icd_description = db.Column(db.String(255))
 
     # this first function __init__ is to establish the class for python GUI
-    def __init__(self, icd10_code, icd10_description):
-        self.icd10_code = icd10_code
-        self.icd10_description = icd10_description
+    def __init__(self, icd_10_codes, icd_description):
+        self.icd_10_codes = icd_10_codes
+        self.icd_description = icd_description
 
     # this second function is for the API endpoints to return JSON
     def to_json(self):
         return {
             'id': self.id,
-            'icd10_code': self.icd10_code,
-            'icd10_description': self.icd10_description
+            'icd_10_codes': self.icd_10_codes,
+            'icd_description': self.icd_description
         }
 
 class Medications_patient(db.Model):
-    __tablename__ = 'production_patient_medications'
+    __tablename__ = 'patients_medication'
 
     id = db.Column(db.Integer, primary_key=True)
-    mrn = db.Column(db.String(255), db.ForeignKey('production_patients.mrn'))
-    med_ndc = db.Column(db.String(255), db.ForeignKey('production_medications.med_ndc'))
+    mrn = db.Column(db.String(255), db.ForeignKey('patients.mrn'))
+    ndc_codes = db.Column(db.String(255), db.ForeignKey('medications.ndc_codes'))
 
     # this first function __init__ is to establish the class for python GUI
-    def __init__(self, mrn, med_ndc):
+    def __init__(self, mrn, ndc_codes):
         self.mrn = mrn
-        self.med_ndc = med_ndc
+        self.ndc_codes = ndc_codes
 
     # this second function is for the API endpoints to return JSON
     def to_json(self):
         return {
             'id': self.id,
             'mrn': self.mrn,
-            'med_ndc': self.med_ndc
+            'med_ndc': self.ndc_codes
         }
     
 class Medications(db.Model):
-    __tablename__ = 'production_medications'
+    __tablename__ = 'medications'
 
     id = db.Column(db.Integer, primary_key=True)
-    med_ndc = db.Column(db.String(255))
-    med_human_name = db.Column(db.String(255))
+    ndc_codes = db.Column(db.String(255))
+    medication_name = db.Column(db.String(255))
 
     # this first function __init__ is to establish the class for python GUI
-    def __init__(self, med_ndc, med_human_name):
-        self.med_ndc = med_ndc
-        self.med_human_name = med_human_name
+    def __init__(self, ndc_codes, medication_name):
+        self.ndc_codes = ndc_codes
+        self.medication_name = medication_name
 
     # this second function is for the API endpoints to return JSON
     def to_json(self):
         return {
             'id': self.id,
-            'med_ndc': self.med_ndc,
-            'med_human_name': self.med_human_name
+            'med_ndc': self.ndc_codes,
+            'med_human_name': self.medication_name
         }
 
 
@@ -157,7 +161,8 @@ def insert(): # note this function needs to match name in html form action
         last_name = request.form['last_name']
         gender = request.form['gender']
         zip_code = request.form['zip_code']
-        new_patient = Patients(mrn, first_name, last_name, gender, zip_code)
+        dob = request.form['dob']
+        new_patient = Patients(mrn, first_name, last_name, gender, zip_code, dob)
         db.session.add(new_patient)
         db.session.commit()
         flash("Patient Inserted Successfully")
@@ -176,6 +181,8 @@ def update(): # note this function needs to match name in html form action
         patient.first_name = request.form.get('first_name')
         patient.last_name = request.form.get('last_name')
         patient.gender = request.form.get('gender')
+        patient.zip_code = request.form.get('zip_code')
+        patient.dob = request.form.get('dob')
         db.session.commit()
         flash("Patient Updated Successfully")
         return redirect(url_for('get_gui_patients'))
@@ -211,11 +218,11 @@ def update_conditions(): # note this function needs to match name in html form a
         ## get mrn from form
         form_id = request.form.get('id')
         print('form_id', form_id)
-        form_icd10_code = request.form.get('icd10_code')
-        print('form_icd10_code', form_icd10_code)
+        form_icd_10_codes = request.form.get('icd_10_codes')
+        print('form_icd_10_codes', form_icd_10_codes)
         patient_condition = Conditions_patient.query.filter_by(id=form_id).first()
         print('patient_condition', patient_condition)
-        patient_condition.icd10_code = request.form.get('icd10_code')
+        patient_condition.icd_10_codes = request.form.get('icd_10_codes')
         db.session.commit()
         flash("Patient Condition Updated Successfully")
         ## then return to patient details page
