@@ -148,7 +148,7 @@ the second container is for vitals, the third container is for allergies, and th
                                 <tr>
                                     <th>Medication Code</th>
                                     {% for x in patient_medications %}
-                                    <td>  {{x.ndc_codes}} </td>
+                                    <td>  {{x.ndc_codes}} 
                                     <br/>
                                     {% for db_medication in db_medications %}
                                         {% if x.ndc_codes == db_medication.ndc_codes %}
@@ -156,6 +156,7 @@ the second container is for vitals, the third container is for allergies, and th
                                         {% endif %}
                                     {% endfor %}
                                     <br />
+                                    </td>
                                     {% endfor %}
                     
 
